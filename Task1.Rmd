@@ -16,10 +16,7 @@ volume = height * width * length
 ```
 
 
-Answer:
-```{r}
-volume
-```
+
 
 
 
