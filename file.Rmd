@@ -1,0 +1,25 @@
+First Rmd file
+========================================================
+
+First enter data:
+
+```{r}
+height = 10
+width = 5
+length = 5
+```
+
+Can be calculated volume:
+
+```{r fig.width=7, fig.height=6}
+volume = height * width * length
+```
+
+
+Answer:
+```{r}
+volume
+```
+
+
+
