@@ -1,4 +1,5 @@
 First Rmd file
+The code was taken from the source: http://linum.cofc.edu/bio611/Rmd/example-markdown.html
 ========================================================
 
 First enter data:
