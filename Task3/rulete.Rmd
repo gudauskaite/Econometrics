@@ -1,4 +1,10 @@
-
+---
+title: "Task3"
+author: "Laura Gudauskaitė"
+date: "March 07, 2016"
+output: html_document
+---
+Ruletė
 ========================================================
 
 Nagrinėkime standartinę kazino ruletę. Kokia tikimybė po $1000$ vienodų statymų ant vienos pasirinktos spalvos, bus teigiamas balansas? Raskite apytikslę $x$ reikšmę, kuriai galioja nelygybe $P(balansas<x) = 0.25$.
