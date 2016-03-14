@@ -1,3 +1,9 @@
+---
+title: "Task4"
+author: "Laura Gudauskaitė"
+date: "March 14, 2016"
+output: html_document
+---
 Task 4
 ========================================================
 Aplanke task4 yra duomenų failas, kuriame rasite nekilnojamo turto (o tiksliau gyvenamųjų butų) kainas ir kaikurias jų charakteristikas. Jūsų užduotis atlikti išsamią tiesinę regresiją. Lygtis reikalinga prekyboms agentams, kad geriau suprastų kokią įtaką skirtingos charakteristikos daro galutinei kainai.
