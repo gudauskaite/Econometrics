@@ -24,7 +24,7 @@ Tikimybė, kad bus teigiamas balansas
 
 ```{r}
 balance<-replicate(1000,roulette())
-prob<-mean(balance > 0) #tikimybė
+mean(balance > 0) #tikimybė
 ```
 
 Apytikslė x reikšmė, kuriai galioja nelygybė P(balansas<x) = 0.25
