@@ -1,0 +1,120 @@
+Task 4
+========================================================
+Aplanke task4 yra duomenų failas, kuriame rasite nekilnojamo turto (o tiksliau gyvenamųjų butų) kainas ir kaikurias jų charakteristikas. Jūsų užduotis atlikti išsamią tiesinę regresiją. Lygtis reikalinga prekyboms agentams, kad geriau suprastų kokią įtaką skirtingos charakteristikos daro galutinei kainai.
+
+### Pirmiausia nusiskaitome duomenis iš failo task4data.txt
+
+```{r}
+duom <- read.csv2(file="C:/Users/Lauros/Desktop/task4data.txt", header=TRUE)
+attach(duom) #kad lengviau būtų naudoti kintamųjų vardus
+```
+
+### Tikriname koreliacijas tarp kintamųjų:
+
+```{r}
+cor(plotas,aukstas)
+plot(plotas,aukstas) #is grafiko matome, kad tikrai nekoreliuoja
+cor(plotas,garsoIzoliacija)
+cor(plotas,silumosLaidumas)
+cor(plotas,atstumasIkiPrekybosCentro)
+cor(garsoIzoliacija,silumosLaidumas)
+#garsoIzoliacija koreliuoja su silumosLaidumas, taigi išmetame silumosLaidumas, paliekame garsoIzoliacija
+plot(garsoIzoliacija,silumosLaidumas)
+```
+
+### Sudarome tiesinį dauginės regresijos modelį :
+```{r}
+modelis <- lm(kaina~plotas+aukstas+garsoIzoliacija+atstumasIkiPrekybosCentro)
+```
+
+### Ieškome išskirčių:
+```{r}
+opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
+plot(modelis, las = 1)
+par(opar)
+```
+
+iš grafikų puikiai matosi reikšmės su kuriomis galime turėti problemų, paskutinis grafikas yra kuko mato, kuris naudojamas rasti išskirtis, matome tai 253, 213, 254. 
+***Galime rasti ne tik iš grafiko:***
+```{r}
+library(MASS) #paketas reikalingas stdres funkcijai
+d1 <- cooks.distance(modelis)
+r <- stdres(modelis) #standartizuotos liekanos
+u <- cbind(duom, d1, r) #prie duomenu prideda dar reikiamu stulpeliu
+u[d1 > 4/254, ] #4/n kur n stebejimu skaicius
+```
+
+***Ir išmetame***
+```{r}
+a <- c(253,213,254)
+dat<-duom[-a,] #turime duomenis be išskirčių
+```
+
+### Sudarome modelį jau be išskirčių
+```{r}
+modelis2 <- lm(kaina~plotas+aukstas+garsoIzoliacija+atstumasIkiPrekybosCentro, data = dat)
+```
+
+### Tikriname ar modelis neturi multikolinerumo problemų:
+```{r}
+library(car)
+vif(modelis2)
+vif(modelis2) > 2 # taigi matome, kad vifai nera didesni uz 2 vadinasi modelis nera multikolinearus
+
+```
+
+### Tikriname modelio homoskedastiškumą pagal Breusch-Pagan testa 
+
+Hipoteze Ho: paklaidu dispersija yra konstanta ir H1:paklaidu dispersija nera konstanta
+```{r}
+ncvTest(modelis2)
+# kadangi p > 0.05 Ho priimame ir modelis yra homoskedastiškas(vadinasi modeli paliekame toki)
+```
+
+### Išmetame nereikšmingą kintamaji:
+```{r}
+summary(modelis2)
+```
+
+Taigi ismetame kintamaji atstumasIkiPrekybosCentro pagal p reiksme > 0.05 
+
+### Ir galutinis modelis atrodo taip:
+```{r}
+modelis3 <- lm(kaina~plotas+aukstas+garsoIzoliacija, data = dat)
+summary(modelis3)
+```
+
+Visi kintamieji reikšmingi.
+
+### Pažiūrėkime paklaidų normalumą:
+```{r}
+library(MASS)
+residuals <- studres(modelis3)
+hist(residuals, freq=FALSE,
+   main="Distribution of Studentized Residuals")
+xmodelis3<-seq(min(residuals),max(residuals),length=40)
+ymodelis3<-dnorm(xmodelis3)
+lines(xmodelis3, ymodelis3)
+```
+
+Liekanos turi normalųjį skirstinį.
+
+### Tikriname ir paklaidų autokoreliaciją:
+```{r}
+durbinWatsonTest(modelis3) # p reiksme > 0.05 vadinasi liekanos nera autokoreliuotos
+```
+
+### Naudodamiesi ACAIKE'S kriteriju, nes modeliuose kintamuju skaicius skiriasi, patikrinsime modelio "gerumą":
+```{r}
+AIC(modelis)
+AIC(modelis2)
+AIC(modelis3) #kadangi modelis3 ACAIKE maziausias vadinasi modelis geriausias
+```
+
+
+### Modelis3 galutinis modelis su koeficientais:
+```{r}
+summary(modelis3)$coef
+```
+
+### Galime pateikti, kainos lygti taip:  $$kaina = \ 7829.8277 + \ 597.0250 plotas +\ 312.7314 aukstas +\ 575.4493 garsoizoliacija$$
