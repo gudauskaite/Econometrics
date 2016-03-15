@@ -25,7 +25,8 @@ Skaiciuojama tikimybė, kad bus teigiamas balansas
 
 ```{r}
 balance<-replicate(1000,roulette())
-# is grafiko galime matyti, kad turi normaluji skirstini ir vidurkis truputi virs 0, o tikimybe laimeti didelia suma maza
+# is grafiko galime matyti, kad turi normaluji skirstini ir vidurkis truputi virs 0,
+#o tikimybe laimeti didelia suma labai maza
 hist(balance, main = "Balance histogram", col = 3)
 mean(balance > 0) #tikimybė
 ```
