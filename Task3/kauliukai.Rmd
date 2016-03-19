@@ -9,32 +9,37 @@ Kauliukai
 Pirmasis žaidėjas meta vieną kauliuką ir fiksuojamas atsivertusių taškų skaičius. Antrasis žaidėjas meta du kauliukus ir fiksuojamas dydis: $\max(x_1, x_2)-1$, kur $x_1$ ir $x_2$ žymi pirmojo ir antrojo kauliukų iškritusių akių skaičių. Jeigu žaidėjų gautų taškų skaičiai yra lygus, tai ekspermentas kartojamas iš naujo (ir taip kartojama tol, kol galiausiai nustatomas laimėtojas). Kokia tikimybė laimėti pirmajam žaidėjui?
 
 
-Kauliukų ridenimo funkcija nustatanti laimėtoją
+Funkcija bendruoju atveju ivedus kiek kauliuku bus ridenama:
 ```{r}
-rollDice <- function()
-  {  
-  player1 = 0
-  player2 = 0
-  
+rolldice <- function(NDice){
+  if(NDice == 1)
+    sample(6,size = 1,replace=TRUE)
+  else
+    max(sample(6, size = 2, replace = TRUE))-1
+}
+```
+Tada sukuriame funkcija nustatyti laimetoja, kurio tasku skaicius didesnis:
+```{r}
+rollwiner <- function(player1, player2){  
   while (player1 == player2) #eksperimentas kartojamas, jei taškų skaičiai vienodi 
   {
-    player1 <-sample(6,size = 1,replace=TRUE) #pirmo žaidėjo atsivertusių taškų skaičius
-    player2 <-max(sample(6,size=2,replace=TRUE))-1 #antro žaidėjo atsivertusių taškų skaičius
+    player1 <- rolldice(1) #pirmo žaidėjo atsivertusių taškų skaičius
+    player2 <- rolldice(2) #antro žaidėjo atsivertusių taškų skaičius
   }
   if(player1 > player2){
     return(TRUE)
   }
   else if(player1 < player2){
     return(FALSE)
-}
+  }
 }
 ```
 
-Kartojame n kartų apskaičiuoti tikimybei laimėti pirmajam žaidėjui
+Kartojame n kartų laimetojo funkcija apskaičiuoti tikimybei laimėti pirmajam žaidėjui:
 
 ```{r}
-  n = 10000
-  again = replicate(n, rollDice())
-  mean(again)
+n = 10000
+again = replicate(n, rollwiner(rolldice(1), rolldice(2)))
+mean(again) #tikimybe nugaleti pirmajam zaidejui
 ```
 
