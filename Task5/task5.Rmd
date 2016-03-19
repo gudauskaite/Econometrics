@@ -1,4 +1,10 @@
-
+---
+title: "Task5"
+author: "Laura Gudauskaitė"
+date: "March 18, 2016"
+output: html_document
+---
+Task 5
 ========================================================
 Pinigų paklausa. Šioje užduotyje reikia atlikti tiesinę regresiją. Pakete dynlm yra duomenų masyvas M1Germany - ten yra ir jo aprašymas. Iš turimų duomenų sudarykite ir įvertinkite tiesinę regresiją, kurios endogeninis kintamasis yra logm1. Lygtis būtų naudojama prognozuoti pinigų kiekį artimiausiam laikotarpiui į prieki remiantis dabartine situacija. Taigi prognozės sudarymui lygtis gali naudoti tik tuos duomenis, kurie būtų žinomi prognozavimo momentu.
 
