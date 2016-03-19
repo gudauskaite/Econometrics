@@ -8,7 +8,7 @@ Linear regression and sample size
 Pakartojimui kaip atrodo ir kaip sudaromas modelis, bei ivertinamas(regresine tiese)
 The code was taken from the source: https://github.com/petrelharp/r-markdown-tutorial/blob/master/examples/linear-regression.Rmd
 
-***One data set***
+##One data set
 
 Let's simulate some samples, fit a linear model, and make a plot just to check everything looks right.
 
