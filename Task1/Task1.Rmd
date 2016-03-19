@@ -1,21 +1,40 @@
-First Rmd file
+---
+title: "Task1-First Rmd file"
+author: "Laura Gudauskaitė"
+output: html_document
+---
+Linear regression and sample size
 ========================================================
-The code was taken from the source: http://linum.cofc.edu/bio611/Rmd/example-markdown.html
+Pakartojimui kaip atrodo ir kaip sudaromas modelis, bei ivertinamas(regresine tiese)
 
-First enter data:
+*One data set*
+
+Let's simulate some samples, fit a linear model, and make a plot just to check everything looks right.
+
+Simulated data:
 
 ```{r}
-height = 10
-width = 5
-length = 5
+n <- 10
+slope <- 0.2
+noise.sd <- 0.25
+xy <- data.frame( x=rnorm(n))
+xy$y <- xy$x * slope + noise.sd*rnorm(n)
+summary(xy)
 ```
 
-Can be calculated volume:
+Now, fit a linear model:
 
-```{r fig.width=7, fig.height=6}
-volume = height * width * length
+```{r}
+xy.lm <- lm( y ~ x, data=xy )
+summary(xy.lm)
 ```
 
+Look at the results:
+
+```{r}
+plot( y ~ x, data=xy )
+abline(coef(xy.lm),col='red')
+```
 
 
 
