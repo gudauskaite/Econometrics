@@ -56,7 +56,7 @@ vif(mod5)
 vif(mod6)
 vif(mod7)
 ```
-Matome, kur nera kintamojo loggnp nera multikolinearumo problemos, vadinasi sitas kintamasis labai koreliuoja su kitais. Kur yra problema naudosime funkcija d(), panaikinti problema. Panaikine problema gauname visus vifus mazesnius uz 2, multikolinearumo problemos nebera modeliuose.
+Matome, kur nera kintamojo loggnp nera multikolinearumo problemos, vadinasi sitas kintamasis labai koreliuoja su kitais. Kur yra problema naudosime funkcija d(), panaikinti trenda duomenyse ir multikolinearumo problema. Panaikine problema gauname visus vifus mazesnius uz 2, multikolinearumo problemos nebera modeliuose.
 
 ***Tikriname pagal Acaike's kriteriju kuris modelis geriausias***
 ```{r}
