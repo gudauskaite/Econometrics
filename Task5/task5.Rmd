@@ -45,6 +45,7 @@ cor(M1Germany, use="na.or.complete") # Taigi duomenys yra koreliuoti
 ```
 
 ***Kadangi duomenys yra koreliuoti tikrinsime ar nera multikolinearumo problemos***
+
 tikriname vifus:
 ```{r}
 vif(mod1)
