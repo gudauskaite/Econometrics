@@ -1,4 +1,9 @@
-
+---
+2	title: "Task6"
+3	author: "Laura Gudauskaitė"
+4	date: "April 18, 2016"
+5	output: html_document
+6	---
 	Task 6
 ========================================================
 
