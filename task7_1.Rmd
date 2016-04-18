@@ -1,0 +1,54 @@
+Task 7
+========================================================
+
+Šaltinyje [@Hyndman2014a, ch. 2. The forecaster’s toolbox, Lab Session 2] Yra penkios užduotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
+
+1. The function tsdisplay(data, plot.type="scatter") is useful
+for showing a time plot, ACF plot and lagged scatterplot on the
+same graph. Use it to produce plots of the following time series:
+bricksq, hsales, ibmclose
+Can you spot the effects of seasonality, cyclicity and trend?
+
+**Jei neturime susiinstaliuojame fpp paketą, jei turime tiesiog naudojame:**
+
+```{r, message=FALSE}
+library(fpp)
+```
+
+**Pradedame nuo bricksq duomenu nagrinejimo:**
+
+```{r}
+tsdisplay(bricksq, plot.type="scatter")
+```
+
+1) sezoniskumas: Galime pastebeti pasikartojimus, taigi duomenys yra sezoniski tai matome ir is ACF grafiko.
+
+2) cikliškumas : Galime speti cikliskuma 1955-1975, 1975-1982, 1982-1992
+
+3) trendas: Is duomenu grafiko matome, kad duomenys kyla ir ACF mazeja vadinasi yra trendas.
+
+
+**Nagrinejame hsales duomenis :**
+
+```{r}
+tsdisplay(hsales, plot.type="scatter")
+```
+
+1) sezoniskumas: Matomas ryskus kasmetinis sezoniskumas is duomenu  ir grafike ACF pikai 1 ir 12 ir 24, kurie parodo sezoniskuma.
+
+2) cikliskumas : Cikliskumas nera ryskus siuose duomenyse, bet galime speti, kad yra siais laikotarpiais 1975-1982, 1982-1992 ir 1992-1996.
+
+3) trendas: trendo nera, tai patvirtina ir ACF grafikas, kuriame taip pat nesimato trendo
+
+
+**Nagrinejame ibmclose duomenis:**
+
+```{r}
+tsdisplay(ibmclose, plot.type="scatter")
+```
+
+1) sezoniskumas: nesimato nei is duomenu nei is ACF grafiko
+
+2) cikliskumas: Nera aiskaus cikliskumo, galetumeme tik speti, kai kuriuos laikotarpius
+
+3) trendas : Is duomenu ryskaus trendo kaip ir nera matyti, taciau ACF grafikas parodo, kad jis yra.
