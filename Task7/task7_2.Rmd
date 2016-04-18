@@ -1,0 +1,92 @@
+Task7
+========================================================
+
+Šaltinyje [@Hyndman2014a, ch. 2. The forecaster’s toolbox, Lab Session 2] Yra penkios užduotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
+
+
+
+```{r,message=FALSE}
+library(fpp)
+```
+
+
+**(a) Duomenims bricksq, ibmclose, hsales darysime prognozes naive ir seasonal naive metodu:**
+
+```{r}
+# bricksq duomenims:
+plot(rwf(bricksq, h=20)) #naive
+plot(snaive(bricksq, h=20)) # seasonal naive
+```
+
+Seasonal naive metodas geriau prognuozuoja, nes atsizvelgia ir i sezoniskuma esanti duomenyse.
+
+```{r}
+#ibmclose duomenims:
+plot(rwf(ibmclose, h=20)) #naive
+plot(snaive(ibmclose, h=20)) # seasonal naive
+```
+
+Tas pats abiemis metodais, nes duomenyse nera sezoniskumo.
+
+```{r}
+#hsales duomenims:
+plot(rwf(hsales, h=20)) #naive
+plot(snaive(hsales, h=20)) # seasonal naive
+```
+
+Geriau prognuozuoja seasonal naive metodas, nes atsizvelgia i sezoniskuma.
+
+**(b) Nagrinesime liekanas:**
+
+```{r}
+# bricksq duomenims:
+resbr <- residuals(snaive(bricksq, h=20))
+Acf(resbr)
+```
+
+Is ACF grafiko matome, kad taskuose 1,2,4,5,6,7,8,9,10,17,19 yra autokoreliacija, nes virs mielynos linijos, taigi liekanos tikrai nera baltasis triuksmas.Truksta trendo.
+
+```{r}
+#ibmclose duomenims:
+resim <- residuals(rwf(ibmclose, h=20))
+Acf(resim)
+```
+
+Is ACF grafiko matome, kad tik keletas tasku ir nezymiai iskile virs melynos linijos, vadinasi autokoreliacijos nera, taigi galime teigti, kad liekanos yra baltasis triuksmas.Truksta trendo ir cikliskumo.
+
+```{r}
+#hsales duomenims:
+resh <- residuals(snaive(hsales, h=20))
+Acf(resh)
+```
+
+Is ACF grafiko matome, kad yra nemazai tasku kurie ryskiai ir zymiai kerta melyna linija, vadinasi autokoreliacija yra reiksminga, taigi liekanos nera baltasis triuksmas. Cikliskumas pagerintu prognoze
+
+**(c) Su Ljung-Box testu tikrinsime ar liekanos tikrai yra baltasis triuksmas:**
+
+```{r}
+# bricksq duomenims:
+# Ho: liekanos yra baltasis triuksmas
+# H1: liekanos nera baltasis triuksmas
+Box.test(resbr, fitdf=0, type="Lj")
+```
+
+p-value < 0.05 Taigi, H0 atmetame, vadinasi liekanos nėra baltasis triukšmas, to mes ir tikėjomės.
+
+```{r}
+#ibmclose duomenims:
+# Ho: liekanos yra baltasis triuksmas
+# H1: liekanos nera baltasis triuksmas
+Box.test(resim, fitdf=0, type="Lj")
+```
+
+p-value > 0.05 Taigi, Ho priimame vadinasi liekanos yra baltasis triuksmas.
+
+```{r}
+#hsales duomenims:
+# Ho: liekanos yra baltasis triuksmas
+# H1: liekanos nera baltasis triuksmas
+Box.test(resh, fitdf=0, type="Lj")
+```
+
+p-value < 0.05 Taigi, H0 atmetame, vadinasi liekanos nėra baltasis triukšmas, kaip ir teigeme anksciau
