@@ -3,7 +3,7 @@
 	author: "Laura Gudauskaitė"
 	date: "Tuesday, April 05, 2016"
 	output: html_document
-	---
+---
 	
 	TASK 6
 	
