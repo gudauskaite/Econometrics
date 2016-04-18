@@ -1,0 +1,67 @@
+
+	Task 6
+========================================================
+
+Šaltinyje [@Hyndman2014a, ch. 1. Introduction to forecasting, Lab Session 1] Yra dvi užduotys. Jums reikia padaryti vieną (galite laisvai pasirinkti kurią). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
+
+1. Use the Dow Jones index (data set dowjones) to do the following:
+(a) Produce a time plot of the series.
+(b) Produce forecasts using the drift method and plot them.
+(c) Show that the graphed forecasts are identical to extending the
+line drawn between the first and last observations.
+(d) Try some of the other benchmark functions to forecast the same
+data set. Which do you think is best? Why?
+
+Jei neturime susiinstaliuojame fpp paketą, jei turime tiesiog naudojame:
+```{r}
+library(fpp)
+```
+
+(a) Atsidarome mūsų duomenis ir išbrežiame duomenų grafiką:
+
+```{r}
+dowjones
+plot(dowjones, main="Dow Jones duomenų grafikas", lwd = 2)
+```
+
+(b) Darome prognozę DRIFT metodu ir nubrežiame ją:
+
+```{r}
+dr <- rwf(dowjones, drift=TRUE, h=20)
+plot(dr, main="Drift metodu prognozė", ylab = "Duomenys", xlab = "Laikas" ,lwd=2)
+```
+Prognozė nėra labai tiksli, nes metodas DRIFT prognuozuoja pagal paskutinę reikšmę plius vidutinis pokytis.
+
+(c) Brėžiame linija nuo pradinės reikšmės iki paskutiniosios:
+
+```{r}
+# susirandame reikalingus taškus:
+x1<- 1
+x2<- 78
+y1<-dowjones[1]   
+y2<-dowjones[78] 
+
+plot(dr, main="Drift metodu prognozė", ylab = "Duomenys", xlab = "Laikas" ,lwd=2)
+# brežiame linija tarp taškų:
+segments(x1, y1, x2, y2, lwd=2) 
+```
+
+(d) Darysime prognozes ir kitais metodais VIDURKIO, NAIVIUOJU IR SEZONINIU NAIVIUOJU :
+
+```{r}
+plot(dowjones, main="Dow Jones duomenų grafikas", lwd = 2, xlim=c(0,100))
+
+# mean metodu:
+lines(meanf(dowjones, h=20)$mean, col = 3, lwd=2)
+# naive metodu:
+lines(naive(dowjones, h=20)$mean, col = 5,lwd=2)
+# seasonal naive:
+lines(snaive(dowjones, h=20)$mean,col= 8,lwd=2)
+# ir pries tai naudotas drift metodas:
+lines(rwf(dowjones, drift=TRUE, h=20)$mean, col = 10, lwd = 2)
+
+
+legend("topleft", legend=c("Mean", "Naive", "Seasonal naive", "Drift"), col=c(3, 5, 8, 10), lwd=2)
+```
+
+Naive ir seasonal naive metodai sutampa, nes duomenyse nera sezoniskumo. Gal manau geriausia remtis naive metodu, nes nebutu labai staigaus kritimo nei augimo, gal tiksliausia butu prognuozuoti sitaip.
