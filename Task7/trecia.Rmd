@@ -1,0 +1,108 @@
+---
+title: "Task 7"
+author: "Laura Gudauskaitė"
+date: "Tuesday, April 18, 2016"
+output: "html_document"
+---
+
+###Task7
+========================================================
+
+Šaltinyje [@Hyndman2014a, ch. 2. The forecaster’s toolbox, Lab Session 2] Yra penkios užduotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
+
+**3.** For the data set bricksq:
+(a) Split the data into two parts using
+bricks1 <- window(bricksq, end=1987.99)
+bricks2 <- window(bricksq, start=1988)
+(b) Check that your data have been split appropriately by producing
+the following plot.
+plot(bricksq)
+lines(bricks1,col="red")
+lines(bricks2,col="blue")
+(c) Calculate forecasts using each of the four benchmark methods
+applied to bricks1.
+(d) Compare the accuracy of your forecasts against the actual values
+stored in bricks2. For example:
+f1 <- meanf(bricks1)
+accuracy(f1,bricks2)
+(e) Which method does best? Why?
+(f) For the best method, compute the residuals and plot them. For
+example
+res <- residuals(f1)
+plot(res)
+hist(res, breaks="FD")
+Acf(res)
+Do the residuals appear to be uncorrelated and normally distributed?
+
+**Naudosime duomenis bricksq, naudosime fpp paketą**
+
+```{r,message=FALSE}
+library(fpp)
+```
+
+**(a) Skiriame duomenis i dvi dalis:**
+
+```{r}
+bricks1 <- window(bricksq, end=1987.99)
+bricks2 <- window(bricksq, start=1988)
+```
+
+**(b) Patikrinsime, kad duomenys tinkamai buvo perskirti, isbrešime grafiką:**
+
+```{r}
+plot(bricksq)
+lines(bricks1,col=2)
+lines(bricks2,col=5)
+```
+
+**(c) Isbandysime visus metodus - drift, mean, naive ir seasonal naive:**
+
+```{r}
+#mean metodas:
+mn <- meanf(bricks1, h=27)
+#naive metodas:
+naiv <- naive(bricks1, h=27)
+#seasonal naive metodas:
+snaiv <- snaive(bricks1, h=27)
+#drift metodas:
+drf <- rwf(bricks1, drift=TRUE, h=27)
+
+# grafiskai:
+plot(bricks1, main="bricks1 duomenų prognozių grafikas", ylab="Duomenys", xlab="Laikas", col=1, lwd=1, xlim=c(1955,1995) )
+#Seasonal naive metodas:
+lines(snaiv$mean,col=2,lwd=2)
+#Mean metodas:
+lines(mn$mean, col=3, lwd=2)
+#Naive metodas:
+lines(naiv$mean, col=4, lwd=2)
+#Drift metodas:
+lines(drf$mean, col=6, lwd=2)
+
+legend("topleft", legend=c("Seasonal","Mean", "Naive", "Drift"), col=c(2, 3, 4, 6), lwd=1, cex=0.7)
+```
+
+**(d) Lygindami tikrasias reiksmes su modelio tikriname tiksluma:**
+
+```{r}
+accuracy(snaiv,bricks2)
+accuracy(mn,bricks2)
+accuracy(naiv,bricks2)
+accuracy(drf,bricks2)
+```
+
+**(e)** 
+Seasonal metodas geriausias, nes maziausi RMSE, MAE, MAPE, MASE. Siaip lyginant geriausias butu drift, bet jis priklauso tik nuo trendo, nereaguoja i krentancias reiksmes, o tik i bendra augima, todel jis netinka tai geriausias lieka seasonal metodas.
+
+**(f) Analizuojame liekanas**
+
+```{r}
+res <- residuals(snaiv) #geriausias metodas
+plot(res)
+hist(res, breaks="FD")  # panašu i normaluji pasiskirstima
+shapiro.test(res)       # p-value yra labai mažas, taigi liekanos nėra normalios.
+Acf(res)                # liekanos yra autokoreliuotos, nes 1,2,5.. lagai užeiną už mėlynos linijos
+# Patikrinsime ar liekanos yra baltasis triukšmas:
+Box.test(res, fitdf=0, type="Lj") 
+# p-value < 0.05 Taigi, Ho atmetame, vadinasi liekanos nėra baltasis triukšmas.
+```
+
