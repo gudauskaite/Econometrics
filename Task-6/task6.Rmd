@@ -19,19 +19,19 @@ output: "html_document"
   (d) Try some of the other benchmark functions to forecast the same
   data set. Which do you think is best? Why?
 
-Jei neturime susiinstaliuojame fpp paketą, jei turime tiesiog naudojame:
-```{r}
+**Naudosime fpp paketą:**
+```{r,message=FALSE}
 library(fpp)
 ```
 
-(a) Atsidarome mūsų duomenis ir išbrežiame duomenų grafiką:
+**(a) Atsidarome mūsų duomenis ir išbrežiame duomenų grafiką:**
 
 ```{r}
 dowjones
 plot(dowjones, main="Dow Jones duomenų grafikas", lwd = 2)
 ```
 
-(b) Darome prognozę DRIFT metodu ir nubrežiame ją:
+**(b) Darome prognozę DRIFT metodu ir nubrežiame ją:**
 
 ```{r}
 dr <- rwf(dowjones, drift=TRUE, h=20)
@@ -39,7 +39,7 @@ plot(dr, main="Drift metodu prognozė", ylab = "Duomenys", xlab = "Laikas" ,lwd=
 ```
 Prognozė nėra labai tiksli, nes metodas DRIFT prognuozuoja pagal paskutinę reikšmę plius vidutinis pokytis.
 
-(c) Brėžiame linija nuo pradinės reikšmės iki paskutiniosios:
+**(c) Brėžiame linija nuo pradinės reikšmės iki paskutiniosios:**
 
 ```{r}
 # susirandame reikalingus taškus:
@@ -53,7 +53,7 @@ plot(dr, main="Drift metodu prognozė", ylab = "Duomenys", xlab = "Laikas" ,lwd=
 segments(x1, y1, x2, y2, lwd=2) 
 ```
 
-(d) Darysime prognozes ir kitais metodais VIDURKIO, NAIVIUOJU IR SEZONINIU NAIVIUOJU :
+**(d) Darysime prognozes ir kitais metodais VIDURKIO, NAIVIUOJU IR SEZONINIU NAIVIUOJU :**
 
 ```{r}
 plot(dowjones, main="Dow Jones duomenų grafikas", lwd = 2, xlim=c(0,100))
