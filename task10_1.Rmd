@@ -1,0 +1,99 @@
+---
+title: "Task 10"
+author: "Laura Gudauskaitė"
+date: "Tuesday, April 19, 2016"
+output: "html_document"
+---
+
+###Task10
+========================================================
+
+**1. Užduotis** For this exercise, use the price of a dozen eggs in the United States
+from 1900–1993 (data set eggs). Experiment with the various options
+in the holt() function to see how much the forecasts change
+with damped or exponential trend. Also try changing the parameter
+values for  and  to see how they affect the forecasts. Try to
+develop an intuition of what each parameter and argument is doing
+to the forecasts.
+[Hint: use h=100 when calling holt() so you can clearly see the
+differences between the various options when plotting the forecasts.]
+Which model gives the best RMSE?
+Do the residuals from the best model look like white noise?
+
+**Mums reikės fpp paketo:**
+
+```{r,message=FALSE}
+library(fpp)
+```
+
+**Pasižiūrime duomenis eggs:**
+
+```{r}
+eggs
+plot(eggs)
+acf(eggs)
+```
+
+Matome duomenys turi mažėjantį trendą.
+
+**Bandome holt() funkciją ir darome prognozes holt, exponential ir damped trendų būdais:**
+
+```{r}
+fit1 <- holt(eggs, alpha=0.8, beta=0.2, initial="simple", h=100) 
+fit2 <- holt(eggs, alpha=0.8, beta=0.2, initial="simple", exponential=TRUE, h=100)
+fit3 <- holt(eggs, alpha=0.8, beta=0.2, damped=TRUE, h=100) 
+
+plot(fit2, type="l", ylab="eggs", xlab="time", main="Prognozės",
+     fcol="white", plot.conf=FALSE)
+#suglodinimas:
+lines(fitted(fit1), col="blue") 
+lines(fitted(fit2), col="red")
+lines(fitted(fit3), col="green")
+#prognozės:
+lines(fit1$mean, col="blue", type="l") 
+lines(fit2$mean, col="red", type="l")
+lines(fit3$mean, col="green", type="l")
+
+legend("topright", lty=1, lwd = 2, col=c("black","blue","red","green"), 
+   c("Data","Holt's linear trend","Exponential trend","Additive damped trend"))
+```
+
+**Pabandome su skirtingais alfa ir beta (alfa sumaziname, beta padidiname):**
+
+```{r}
+fit4 <- holt(eggs, alpha=0.2, beta=0.8, initial="simple", h=100) 
+fit5 <- holt(eggs, alpha=0.5, beta=0.9, initial="simple", exponential=TRUE, h=100)
+ 
+plot(fit5, type="l", ylab="eggs", xlab="time", main="Prognozės",
+     fcol="white", plot.conf=FALSE)
+#suglodinimas:
+lines(fitted(fit4), col="blue") 
+lines(fitted(fit5), col="red")
+#prognozės:
+lines(fit4$mean, col="blue", type="l") 
+lines(fit5$mean, col="red", type="l")
+
+```
+
+Taigi holt metodu prognozuojant pakeitus alfa i mazesni , o beta i didesni gauname, kad prognoze stateja, matome ji ejo zemyn, dabar beveik horizontali. Eksponentiniu metodu alfa sumazinus, o beta padidinus matome, kad prognoze greiciau krinta zemyn ir tada tolyn eina salia jau nulio.
+
+**Žiūrime kurio modelio RMSE yra geriausias(mažiausias):**
+
+```{r}
+accuracy(fit1)[2]
+accuracy(fit2)[2]
+accuracy(fit3)[2]
+accuracy(fit4)[2]
+accuracy(fit5)[2]
+```
+
+Geriausią (mažiausią) RMSE turi fit3, t.y. damped metodas su alfa=0.8 ir beta=0.2.
+
+**Pažiūrėsime, ar fit3 liekanos atrodo kaip baltasis triukšmas:**
+
+```{r}
+Acf(fit3$res)
+Box.test(fit3$res, fitdf=0, type="Lj")
+```
+
+Iš ACF matome, kad liekanos yra baltasis triukšmas, nes praktiškai visos linijos neišeina už kritinių reikšmių ribų(mėlyna linija). Box.test() taip pat tai patvirtina, nes p-value>0.05.
