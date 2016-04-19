@@ -71,4 +71,4 @@ lines(rwf(dowjones, drift=TRUE, h=20)$mean, col = 10, lwd = 2)
 legend("topleft", legend=c("Mean", "Naive", "Seasonal naive", "Drift"), col=c(3, 5, 8, 10), lwd=2)
 ```
 
-Naive ir seasonal naive metodai sutampa, nes duomenyse nera sezoniskumo. Gal manau geriausia remtis naive metodu, nes nebutu labai staigaus kritimo nei augimo, gal tiksliausia butu prognuozuoti sitaip.
+Naive ir seasonal naive metodai sutampa, nes duomenyse nera sezoniskumo. Gal manau geriausia remtis naive metodu, nes nebutu labai staigaus kritimo nei augimo, gal tiksliausia butu prognuozuoti sitaip trumpuoju laikotarpiu.
