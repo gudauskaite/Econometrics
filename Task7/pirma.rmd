@@ -16,7 +16,7 @@ same graph. Use it to produce plots of the following time series:
 bricksq, hsales, ibmclose
 Can you spot the effects of seasonality, cyclicity and trend?
 
-**Jei neturime susiinstaliuojame fpp paketą, jei turime tiesiog naudojame:**
+**Naudosime fpp paketą:**
 
 ```{r, message=FALSE}
 library(fpp)
