@@ -60,7 +60,7 @@ resbr <- residuals(snaive(bricksq, h=20))
 Acf(resbr)
 ```
 
-Is ACF grafiko matome, kad taskuose 1,2,4,5,6,7,8,9,10,17,19 yra autokoreliacija, nes virs mielynos linijos, taigi liekanos tikrai nera baltasis triuksmas.Truksta trendo.
+Is ACF grafiko matome, kad taskuose 1,2,4,5,6,7,8,9,10,17,19 yra autokoreliacija, nes virs mielynos linijos, taigi liekanos tikrai nera baltasis triuksmas. Prognozuojant truksta trendo.
 
 ```{r}
 #ibmclose duomenims:
@@ -68,7 +68,7 @@ resim <- residuals(rwf(ibmclose, h=20))
 Acf(resim)
 ```
 
-Is ACF grafiko matome, kad tik keletas tasku ir nezymiai iskile virs melynos linijos, vadinasi autokoreliacijos nera, taigi galime teigti, kad liekanos yra baltasis triuksmas.Truksta trendo ir cikliskumo.
+Is ACF grafiko matome, kad tik keletas tasku ir nezymiai iskile virs melynos linijos, vadinasi autokoreliacijos nera, taigi galime teigti, kad liekanos yra baltasis triuksmas. Prognozuojant truksta trendo ir cikliskumo.
 
 ```{r}
 #hsales duomenims:
@@ -76,7 +76,7 @@ resh <- residuals(snaive(hsales, h=20))
 Acf(resh)
 ```
 
-Is ACF grafiko matome, kad yra nemazai tasku kurie ryskiai ir zymiai kerta melyna linija, vadinasi autokoreliacija yra reiksminga, taigi liekanos nera baltasis triuksmas. Cikliskumas pagerintu prognoze
+Is ACF grafiko matome, kad yra nemazai tasku kurie ryskiai ir zymiai kerta melyna linija, vadinasi autokoreliacija yra reiksminga, taigi liekanos nera baltasis triuksmas. Cikliskumas pagerintu prognoze.
 
 **(c) Su Ljung-Box testu tikrinsime ar liekanos tikrai yra baltasis triuksmas:**
 
