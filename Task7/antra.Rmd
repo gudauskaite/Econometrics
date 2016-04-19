@@ -8,7 +8,7 @@ output: "html_document"
 ###Task7
 ========================================================
 
-?altinyje [@Hyndman2014a, ch. 2. The forecaster?s toolbox, Lab Session 2] Yra penkios u?duotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada u?duoties rezultatas turi b?ti tvarkingas Rmd failas. ?alia grafik? b?tinai pateikite savo komentarus.
+Šaltinyje [@Hyndman2014a, ch. 2. The forecaster's toolbox, Lab Session 2] Yra penkios užduotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. šalia grafikų būtinai pateikite savo komentarus.
 
 **2.** For each of the same series (bricksq, ibmclose, hsales):
 (a) Use either the naive or seasonal naive forecasting method and
