@@ -1,0 +1,88 @@
+---
+title: "Task 10"
+author: "Laura Gudauskaitė"
+date: "Tuesday, April 19, 2016"
+output: "html_document"
+---
+
+###Task10
+========================================================
+
+**2.užduotis** For this exercise, use the monthly Australian short-term overseas
+visitors data, May 1985–April 2005. (Data set: visitors.)
+(a) Make a time plot of your data and describe the main features of
+the series.
+(b) Forecast the next two years using Holt-Winters’ multiplicative
+method.
+(c) Why is multiplicative seasonality necessary here?
+(d) Experiment with making the trend exponential and/or damped.
+(e) Compare the RMSE of the one-step forecasts from the various
+methods. Which do you prefer?
+(f) Check that the residuals from the best model look like white
+noise.
+
+**Naudosime fpp paketą:**
+
+```{r,message=FALSE}
+library(fpp)
+```
+
+**Duomenys:**
+
+```{r}
+duom <- visitors
+```
+
+**(a) Nubrežiame duomenų grafiką ir apibudinsime juos:**
+
+```{r}
+tsdisplay(duom, plot.type="scatter")
+```
+
+Iš duomenų ir ACF grafiko matome, kad duomenys turi didejimo trendą. Taip pat matomas sezoniškumas, o iš ACF matosi pikai 1,12 ir 24, kas rodo sezoniškumą. Matoma priklausomybė tarp kintamojo ir jo velinio.
+
+**(b) Pagal Holt-Winters’ multiplicative metodą prognozuosiu ateinantiems dviems metams:**
+
+```{r}
+fit1 <- hw(duom, h=24, seasonal="multiplicative")
+plot(fit1)
+```
+
+Prognozė gera, nes atsizvelgta į sezoniškumą ir trendą.
+
+**(c) Multiplicative seasonality**
+Multiplikatyvus sezoniškumas reikalingas, nes duomenų svyravimai laikui einant dideja, nebus tikslinga jeigu imsime konkrečius skirtumus, reikia imti proporcijas. Taigi kiekvienais metais nuo pirmo menesio iki metų galų proporcingai didės skirtumas.
+
+**(d) Eksponentinio ir damped trendų metodu prognozavimas:**
+
+```{r}
+fit2 <- hw(duom, h=24, seasonal="multiplicative", damped=TRUE)
+fit3 <- hw(duom, h=24, seasonal="multiplicative", exponential=TRUE)
+
+plot(fit3, type="l", ylab="lankytojai", xlab="metai", main="Prognozės",
+     fcol="white", plot.conf=FALSE)
+#prognozės:
+lines(fit2$mean, col="blue", type="l") 
+lines(fit3$mean, col="red", type="l")
+```
+
+Eksponentinis trendas didės greičiau, nei damped trendas.
+
+**(e) Patikrinsime kurio metodo RMSE geriausias(mažiausias):**
+
+```{r}
+accuracy(fit1)[2]
+accuracy(fit2)[2]
+accuracy(fit3)[2]
+```
+
+Geriausias su mažiausiu RMSE yra fit2, tai damped metodu prognuozuoti duomenys.ACF grafike matesi, kad trendas gesta, o damped metodu lečiau auga negu eksponentinio, todėl šitas trendas labiau tinka.
+
+**(f) Tikrinsime ar liekanos geriausio modelio yra baltasis triukšmas:**
+
+```{r}
+Acf(fit2$res)
+Box.test(fit2$res, fitdf=0, type="Lj")
+```
+
+Iš ACF matome, kad liekanos yra baltasis triukšmas, nes praktiškai visos linijos neišeina už kritinių reikšmių ribų. Box.test taip pat tai patvirtina, kad yra baltasis triukšmas nes p-value > 0.05.
