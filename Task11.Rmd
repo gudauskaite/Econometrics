@@ -1,0 +1,76 @@
+---
+title: "Task 11"
+author: "Laura Gudauskaitė"
+date: "April 21, 2016"
+output: "html_document"
+---
+
+###Task11
+========================================================
+
+**1.užduotis** Use ets() to find the best ETS model for the price of eggs (data set
+eggs). How does this model compare to the one you found in the
+previous lab session?
+
+
+**Naudosime fpp paketą:**
+
+```{r,message=FALSE}
+library(fpp)
+```
+
+**Mūsų duomenys:**
+
+```{r}
+duom <- eggs
+```
+
+**Ieškome geriausio modelio su ets()**
+
+```{r}
+fit1 <- ets(duom)
+fcast1 <- forecast(fit1, h=100)
+plot(fcast1)
+```
+
+siulomas modelis ets(m,n,n), multiplicative errors, no trend, no seasonal.
+
+**Task10_1 kaip geriausias variantas buvo parinktas fit3 jį lyginsime su fit1, žiūrėsime kurio RMSE geriausias(mažiausias):**
+
+```{r}
+fit3 <- holt(duom, alpha=0.8, beta=0.2, damped=TRUE, h=100) 
+plot(fit3)
+# lyginame modelius:
+accuracy(fit1)[2]
+accuracy(fit3)[2]
+```
+
+Iš esmės abi prognozės atrodo panašios, bet RMSE mažesnis fit1 modelio, modelis tiksliau prognozuoja.
+
+**Galime pažiūrėti grafiškai, kaip atrodo abi prognozės:**
+
+```{r}
+plot(duom, xlim=c(1900,2070), ylim=c(-50,400), main="Prognozės")
+lines(fcast1$mean, col="red")
+lines(fit3$mean, col="blue")
+legend("topright", lty=1, col=c("red","blue"), legend=c("Forecasts from ETS(M,N,N)", "Forecasts from Holt's method"))
+```
+
+
+**Patikrinsime ar fit1 liekanos yra baltasis triukšmas:**
+
+```{r}
+acf(fit1$res)
+```
+
+Matome, kad neišeina už melynos linijos, ribinių reikšmių, taigi spėjame, kad liekanos yra baltasis triukšmas.
+
+Patikrinsime su Box.test() Ho: liekanos yra baltasis triukšmas H1: liekanos nėra baltasis triukšmas
+
+```{r}
+Box.test(fit1$res, fitdf=0, type="Lj")
+```
+
+Kadangi p- value > 0.05 vadinasi Ho priimame ir teigiame, kad liekanos yra baltasis triukšmas.
+
+Galime daryti išvadas, kad fit1 modelis geriau prognozuoja.
