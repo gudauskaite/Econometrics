@@ -31,7 +31,7 @@ e[i] <- visitors[i+1]-fc
 sqrt(mean(e^2,na.rm=TRUE))
 Check that you understand what the code is doing. Ask if you
 don’t.
-**(c)** What would happen in the above loop if I had set
+**( c )** What would happen in the above loop if I had set
 train <- visitors[1:i]?
 **(d)** Plot e. What do you notice about the error variances? Why
 does this occur?
