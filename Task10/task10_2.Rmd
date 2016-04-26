@@ -1,24 +1,24 @@
 ---
 title: "Task 10"
 author: "Laura Gudauskaitė"
-date: "Tuesday, April 19, 2016"
+date: "April 19, 2016"
 output: "html_document"
 ---
 
-###Task10
+Task10
 ========================================================
 
 **2.užduotis** For this exercise, use the monthly Australian short-term overseas
 visitors data, May 1985–April 2005. (Data set: visitors.)
-(a) Make a time plot of your data and describe the main features of
+**(a)** Make a time plot of your data and describe the main features of
 the series.
-(b) Forecast the next two years using Holt-Winters’ multiplicative
+**(b)** Forecast the next two years using Holt-Winters’ multiplicative
 method.
-(c) Why is multiplicative seasonality necessary here?
-(d) Experiment with making the trend exponential and/or damped.
-(e) Compare the RMSE of the one-step forecasts from the various
+**( c )** Why is multiplicative seasonality necessary here?
+**(d)** Experiment with making the trend exponential and/or damped.
+**(e)** Compare the RMSE of the one-step forecasts from the various
 methods. Which do you prefer?
-(f) Check that the residuals from the best model look like white
+**(f)** Check that the residuals from the best model look like white
 noise.
 
 **Naudosime fpp paketą:**
