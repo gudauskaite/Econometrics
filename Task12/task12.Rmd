@@ -11,10 +11,10 @@ Task 12
 1. For this exercise, use the monthly Australian short-term overseas visitors
 data, May 1985–April 2005. (Data set: visitors in expsmooth
 package.)
-(a) Use ets to find the best model for these data and record the
+**(a)** Use ets to find the best model for these data and record the
 training set RMSE. You should find that the best model is
 ETS(M,A,M).
-(b) We will now check how much larger the one-step RMSE is on
+**(b)** We will now check how much larger the one-step RMSE is on
 out-of-sample data using time series cross-validation. The following
 code will compute the result, beginning with four years
 of data in the training set.
@@ -31,20 +31,20 @@ e[i] <- visitors[i+1]-fc
 sqrt(mean(e^2,na.rm=TRUE))
 Check that you understand what the code is doing. Ask if you
 don’t.
-(c) What would happen in the above loop if I had set
+**(c)** What would happen in the above loop if I had set
 train <- visitors[1:i]?
-(d) Plot e. What do you notice about the error variances? Why
+**(d)** Plot e. What do you notice about the error variances? Why
 does this occur?
-(e) How does this problem bias the comparison of the RMSE values
+**(e)** How does this problem bias the comparison of the RMSE values
 from (1a) and (1b)? (Hint: think about the effect of the
 missing values in e.)
-(f) In practice, we will not know that the best model on the whole
+**(f)** In practice, we will not know that the best model on the whole
 data set is ETS(M,A,M) until we observe all the data. So a more
 realistic analysis would be to allow ets to select a different
 model each time through the loop. Calculate the RMSE using
 this approach. (Warning: it will take a while as there are a lot
 of models to fit.)
-(g) How does the RMSE computed in (1f) compare to that computed
+**(g)** How does the RMSE computed in (1f) compare to that computed
 in (1b)? Does the re-selection of a model at each step
 make much difference?
 
