@@ -6,7 +6,6 @@ output: "html_document"
 ---
 	
 TASK 6
-	
 ========================================================
 
 Šaltinyje [@Hyndman2014a, ch. 1. Introduction to forecasting, Lab Session 1] Yra dvi užduotys. Jums reikia padaryti vieną (galite laisvai pasirinkti kurią). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
