@@ -8,7 +8,8 @@ output: "html_document"
 Task 12
 ========================================================
 
-1. For this exercise, use the monthly Australian short-term overseas visitors
+**1.** 
+For this exercise, use the monthly Australian short-term overseas visitors
 data, May 1985–April 2005. (Data set: visitors in expsmooth
 package.)
 **(a)** Use ets to find the best model for these data and record the
