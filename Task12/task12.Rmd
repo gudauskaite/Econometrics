@@ -31,7 +31,7 @@ e[i] <- visitors[i+1]-fc
 sqrt(mean(e^2,na.rm=TRUE))
 Check that you understand what the code is doing. Ask if you
 don’t.
-**( c )** What would happen in the above loop if I had set
+ **( c )**  What would happen in the above loop if I had set
 train <- visitors[1:i]?
 **(d)** Plot e. What do you notice about the error variances? Why
 does this occur?
@@ -65,7 +65,7 @@ data <- visitors
 ```{r}
 fit1 <- ets(data)
 fit1
-fcast1 <- forecast(fit1, h=100)
+fcast1 <- forecast(fit1, h=100) #prognozė
 plot(fcast1)
 ```
 
@@ -90,7 +90,7 @@ fit <- ets(train, "MAM", damped=FALSE)
 fc <- forecast(fit,h=1)$mean
 e[i] <- data[i+1]-fc
 }
-sqrt(mean(e^2,na.rm=TRUE))
+sqrt(mean(e^2,na.rm=TRUE)) #RMSE
 ```
 
 Kodas parodo imant skirtingus training set, koks gaunasi tada RMSE. Gauname didesnį RMSE 18.73602.
