@@ -1,16 +1,16 @@
 ---
 title: "Task 7"
 author: "Laura Gudauskaitė"
-date: "Tuesday, April 18, 2016"
+date: "April 18, 2016"
 output: "html_document"
 ---
 
-###Task 7
+Task 7
 ========================================================
 
 Šaltinyje [@Hyndman2014a, ch. 2. The forecaster’s toolbox, Lab Session 2] Yra penkios užduotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
 
-1. The function tsdisplay(data, plot.type="scatter") is useful
+**1.** The function tsdisplay(data, plot.type="scatter") is useful
 for showing a time plot, ACF plot and lagged scatterplot on the
 same graph. Use it to produce plots of the following time series:
 bricksq, hsales, ibmclose
