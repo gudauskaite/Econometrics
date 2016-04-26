@@ -1,22 +1,22 @@
 ---
 title: "Task 6"
 author: "Laura Gudauskaitė"
-date: "Tuesday, April 05, 2016"
+date: "April 05, 2016"
 output: "html_document"
 ---
 	
-###TASK 6
+TASK 6
 	
 ========================================================
 
 Šaltinyje [@Hyndman2014a, ch. 1. Introduction to forecasting, Lab Session 1] Yra dvi užduotys. Jums reikia padaryti vieną (galite laisvai pasirinkti kurią). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
 
-  1. Use the Dow Jones index (data set dowjones) to do the following:
-  (a) Produce a time plot of the series.
-  (b) Produce forecasts using the drift method and plot them.
-  (c) Show that the graphed forecasts are identical to extending the
+ **1.** Use the Dow Jones index (data set dowjones) to do the following:
+  **(a)** Produce a time plot of the series.
+  **(b)** Produce forecasts using the drift method and plot them.
+  **( c )** Show that the graphed forecasts are identical to extending the
   line drawn between the first and last observations.
-  (d) Try some of the other benchmark functions to forecast the same
+  **(d)** Try some of the other benchmark functions to forecast the same
   data set. Which do you think is best? Why?
 
 **Naudosime fpp paketą:**
@@ -39,7 +39,7 @@ plot(dr, main="Drift metodu prognozė", ylab = "Duomenys", xlab = "Laikas" ,lwd=
 ```
 Prognozė nėra labai tiksli, nes metodas DRIFT prognuozuoja pagal paskutinę reikšmę plius vidutinis pokytis.
 
-**(c) Brėžiame linija nuo pradinės reikšmės iki paskutiniosios:**
+**( c ) Brėžiame linija nuo pradinės reikšmės iki paskutiniosios:**
 
 ```{r}
 # susirandame reikalingus taškus:
