@@ -1,32 +1,32 @@
 ---
 title: "Task 7"
 author: "Laura Gudauskaitė"
-date: "Tuesday, April 18, 2016"
+date: "April 18, 2016"
 output: "html_document"
 ---
 
-###Task7
+Task7
 ========================================================
 
 Šaltinyje [@Hyndman2014a, ch. 2. The forecaster’s toolbox, Lab Session 2] Yra penkios užduotys. Jums reikia padaryti tris (galite laisvai pasirinkti kurias). Kaip visada užduoties rezultatas turi būti tvarkingas Rmd failas. Šalia grafikų būtinai pateikite savo komentarus.
 
 **3.** For the data set bricksq:
-(a) Split the data into two parts using
+**(a)** Split the data into two parts using
 bricks1 <- window(bricksq, end=1987.99)
 bricks2 <- window(bricksq, start=1988)
-(b) Check that your data have been split appropriately by producing
+**(b)** Check that your data have been split appropriately by producing
 the following plot.
 plot(bricksq)
 lines(bricks1,col="red")
 lines(bricks2,col="blue")
-(c) Calculate forecasts using each of the four benchmark methods
+**( c )** Calculate forecasts using each of the four benchmark methods
 applied to bricks1.
-(d) Compare the accuracy of your forecasts against the actual values
+**(d)** Compare the accuracy of your forecasts against the actual values
 stored in bricks2. For example:
 f1 <- meanf(bricks1)
 accuracy(f1,bricks2)
-(e) Which method does best? Why?
-(f) For the best method, compute the residuals and plot them. For
+**(e)** Which method does best? Why?
+**(f)** For the best method, compute the residuals and plot them. For
 example
 res <- residuals(f1)
 plot(res)
@@ -55,7 +55,7 @@ lines(bricks1,col=2)
 lines(bricks2,col=5)
 ```
 
-**(c) Isbandysime visus metodus - drift, mean, naive ir seasonal naive:**
+**( c ) Isbandysime visus metodus - drift, mean, naive ir seasonal naive:**
 
 ```{r}
 #mean metodas:
