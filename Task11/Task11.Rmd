@@ -5,7 +5,7 @@ date: "April 21, 2016"
 output: "html_document"
 ---
 
-###Task11
+Task11
 ========================================================
 
 **1.užduotis** Use ets() to find the best ETS model for the price of eggs (data set
@@ -29,7 +29,7 @@ duom <- eggs
 
 ```{r}
 fit1 <- ets(duom)
-fcast1 <- forecast(fit1, h=100)
+fcast1 <- forecast(fit1, h=100) #prognozė
 plot(fcast1)
 ```
 
