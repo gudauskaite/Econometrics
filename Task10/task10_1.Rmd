@@ -5,14 +5,14 @@ date: "Tuesday, April 19, 2016"
 output: "html_document"
 ---
 
-###Task10
+Task10
 ========================================================
 
 **1. Užduotis** For this exercise, use the price of a dozen eggs in the United States
 from 1900–1993 (data set eggs). Experiment with the various options
 in the holt() function to see how much the forecasts change
 with damped or exponential trend. Also try changing the parameter
-values for  and  to see how they affect the forecasts. Try to
+values for α and β to see how they affect the forecasts. Try to
 develop an intuition of what each parameter and argument is doing
 to the forecasts.
 [Hint: use h=100 when calling holt() so you can clearly see the
