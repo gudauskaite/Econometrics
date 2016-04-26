@@ -1,0 +1,149 @@
+---
+title: "Task 12"
+author: "Laura Gudauskaitė"
+date: "April 26, 2016"
+output: "html_document"
+---
+
+Task 12
+========================================================
+
+1. For this exercise, use the monthly Australian short-term overseas visitors
+data, May 1985–April 2005. (Data set: visitors in expsmooth
+package.)
+(a) Use ets to find the best model for these data and record the
+training set RMSE. You should find that the best model is
+ETS(M,A,M).
+(b) We will now check how much larger the one-step RMSE is on
+out-of-sample data using time series cross-validation. The following
+code will compute the result, beginning with four years
+of data in the training set.
+k <- 48 # minimum size for training set
+n <- length(visitors) # Total number of observations
+e <- visitors*NA # Vector to record one-step forecast errors
+for(i in 48:(n-1))
+{
+train <- ts(visitors[1:i],freq=12)
+fit <- ets(train, "MAM", damped=FALSE)
+fc <- forecast(fit,h=1)$mean
+e[i] <- visitors[i+1]-fc
+}
+sqrt(mean(e^2,na.rm=TRUE))
+Check that you understand what the code is doing. Ask if you
+don’t.
+(c) What would happen in the above loop if I had set
+train <- visitors[1:i]?
+(d) Plot e. What do you notice about the error variances? Why
+does this occur?
+(e) How does this problem bias the comparison of the RMSE values
+from (1a) and (1b)? (Hint: think about the effect of the
+missing values in e.)
+(f) In practice, we will not know that the best model on the whole
+data set is ETS(M,A,M) until we observe all the data. So a more
+realistic analysis would be to allow ets to select a different
+model each time through the loop. Calculate the RMSE using
+this approach. (Warning: it will take a while as there are a lot
+of models to fit.)
+(g) How does the RMSE computed in (1f) compare to that computed
+in (1b)? Does the re-selection of a model at each step
+make much difference?
+
+**Naudosime fpp paketą:**
+
+```{r, message=FALSE}
+library(fpp)
+```
+
+**Mūsų duomenys:**
+
+```{r}
+data <- visitors
+```
+
+**(a) Randame geriausia modelį ets() funkcija:**
+
+```{r}
+fit1 <- ets(data)
+fit1
+fcast1 <- forecast(fit1, h=100)
+plot(fcast1)
+```
+
+Matome, kad siūlomas modelis yra ETS(M,A,M) su multiplicative errors, additive trend ir multiplicative seasonal.
+
+**Randame training set RMSE:**
+
+```{r}
+accuracy(fit1)[2]
+```
+
+**(b) Su kodu tikriname kiek didesnis RMSE naudojantis skirtingais training set:**
+
+```{r}
+k <- 48 # minimum size for training set
+n <- length(data) # Total number of observations
+e <- data*NA # Vector to record one-step forecast errors
+for(i in 48:(n-1))
+{
+train <- ts(data[1:i],freq=12)
+fit <- ets(train, "MAM", damped=FALSE)
+fc <- forecast(fit,h=1)$mean
+e[i] <- data[i+1]-fc
+}
+sqrt(mean(e^2,na.rm=TRUE))
+```
+
+Kodas parodo imant skirtingus training set, koks gaunasi tada RMSE. Gauname didesnį RMSE 18.73602.
+
+**( c ) Pakeičiame train <- visitors[1:i]**
+
+```{r}
+train <- visitors[1:i]
+# train <- data[1:i] pavaizduokime grafiškai:
+plot(train)
+#pažiūrėkime duomenis train:
+train
+```
+
+Matome, kad duomenys nebėra laiko eilutė, o tiesiog vektorius. Nebegalime rinktis modelio laiko eilutei.
+
+**(d) Išbrėšime paklaidų grafiką:**
+
+```{r}
+plot(e)
+```
+
+Matome, kad paklaidų dispersija didėja, nėra konstanta, didėjant laikui. Vadinasi paklaidos yra heteroskedastiškos. Galime pasižiūrėti į duomenų grafiką:
+
+```{r}
+plot(data)
+```
+
+Ir duomenų grafike matome, kad reikšmės bėgant metams labiau išsibarsčiusios. Dėl to galime teigti, kad ir paklaidų dispersija nėra konstanta.
+
+**(e) Kaip ši problema trukdo palyginti 1(a) ir 1(b) RMSE?**
+
+Kadangi RMSE skaiciavime panaikina NA reikšmes(trūkstamas), o panaikinus skiriasi 1(a) ir 1(b) ilgiai, taigi negalime palyginti šių RMSE. Kadangi RMSE pasako modelio prognozavimo paklaidu standartini nuokrypi, taigi esant šiai problemai ir 1(b) didesnei dispersija, nesant variacijai konstanta, didėja ir standartinis nuokrypis, RMSE. 
+
+**(f) Sukame ciklą bandydami visus galimus modelius:**
+
+```{r}
+k <- 48 # minimum size for training set
+n <- length(data) # Total number of observations
+e <- data*NA # Vector to record one-step forecast errors
+for(i in 48:(n-1))
+{
+train <- ts(data[1:i],freq=12)
+fit <- ets(train)  
+fc <- forecast(fit,h=1)$mean
+e[i] <- data[i+1]-fc
+}
+sqrt(mean(e^2,na.rm=TRUE))  #RMSE
+
+```
+
+Labai ilgai sukamas ciklas, nepatogus būdas. RMSE gauname 18.97897
+
+**(g) lyginame 1(b) ir 1(f) RMSE:**
+
+1(b) RMSE gavome 18.73602, o 1(f) gavome RMSE 18.97897. Taigi RMSE labai nesiskiria. Ar sukdami ciklą su ets() funkcija ieškosime geriausio modelio ar naudosime kaip 1(b) pasiūlytą tinkamiausią modelį RMSE beveik vienodi, 1(b) dar net truputį mažesnis ir ciklą sukant užtrunka daug laiko. Taigi galime teigti, kad išbandant skirtingus modelius ieškant gerausio, nebutinai gausime geriausią atsakymą, mažiausia RMSE.
