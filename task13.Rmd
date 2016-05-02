@@ -1,0 +1,213 @@
+---
+title: "Task13"
+author: "Laura Gudauskaitė"
+date: "April 26, 2016"
+output: html_document
+---
+
+Task13
+========================================================
+
+**1 užduotis** For the following series, find an appropriate Box-Cox transformation
+and order of differencing in order to obtain stationary data.
+
+**(a)** usnetelec
+
+**(b)** usgdp
+
+**( c )** mcopper
+
+**(d)** enplanements
+
+**(e)** visitors
+
+**Naudosime fpp paketą:**
+
+```{r, message=FALSE}
+library(fpp)
+```
+
+**(a) usnetelec:**
+
+```{r}
+#duomenys:
+usnetelec
+plot(usnetelec)
+# Matome, kad duomenys turi trendą didėti, bet neturi sezoniškumo
+lemda1<-BoxCox.lambda(usnetelec) #randa reikiama lemda
+n1<-ndiffs(usnetelec) # diferenciavimo eilė, ndiffs nes nera sezoniškumo
+#panaudosime boxcox tranformacija ir diferenciavimą:
+df <- diff(BoxCox(usnetelec, lambda =lemda1),differences = n1)
+plot(df, col="blue", ylab="diferencijuoti duomenys")
+```
+
+Galime ir su testu kpss.test() įsitikinti, kad duomenys tapo stacionarūs
+Ho: duomenys stacionarūs H1: duomenys nestacionarūs:
+
+```{r}
+kpss.test(df)
+```
+
+Kadangi p-value < 0.05, vadinasi Ho atmetame, duomenys nėra stacionarūs.Taigi antrą kartą diferensijuosime, kad taptų stacionariais ir vėl patikrinsime:
+
+```{r}
+df <- diff(BoxCox(usnetelec, lambda =lemda1),differences = 2)
+plot(df)
+kpss.test(df)
+```
+
+Dabar jau gavome stacionarius duomenis du kartus diferencijavę, nes p value > 0.05, Ho priimame.
+
+**(b)usgdp:**
+
+```{r}
+#duomenys:
+plot(usgdp)
+# Matome, kad duomenys turi trendą didėti, bet neturi sezoniškumo
+lemda2<-BoxCox.lambda(usgdp) #randa reikiama lemda
+n2<-ndiffs(usgdp) # diferenciavimo eilė, ndiffs nes nera sezoniškumo
+#panaudosime boxcox tranformacija ir diferenciavimą:
+df2 <- diff(BoxCox(usgdp, lambda =lemda2),differences = n2)
+plot(df2, col="blue", ylab="diferencijuoti duomenys")
+```
+
+Galime ir su testu kpss.test() įsitikinti, kad duomenys tapo stacionarūs
+Ho: duomenys stacionarūs H1: duomenys nestacionarūs:
+
+```{r}
+kpss.test(df2)
+```
+
+Kadangi p-value > 0.05, vadinasi Ho priimane, duomenys stacionarūs.
+
+**(c ) mcopper:**
+
+```{r}
+#duomenys:
+plot(mcopper)
+acf(mcopper)
+# Matome, kad duomenys turi trendą didėti, bet neturi sezoniškumo
+lemda3<-BoxCox.lambda(mcopper) #randa reikiama lemda
+n3<-ndiffs(mcopper) # diferenciavimo eilė, ndiffs nes nera sezoniškumo
+#panaudosime boxcox tranformacija ir diferenciavimą:
+df3 <- diff(BoxCox(mcopper, lambda =lemda3),differences = n3)
+plot(df3, col="blue", ylab="diferencijuoti duomenys")
+```
+
+Galime ir su testu kpss.test() įsitikinti, kad duomenys tapo stacionarūs
+Ho: duomenys stacionarūs H1: duomenys nestacionarūs:
+
+```{r,message=FALSE}
+kpss.test(df3)
+```
+
+Kadangi p-value > 0.05, vadinasi Ho priimane, duomenys stacionarūs.
+
+**(d) enplanements:**
+
+```{r}
+#duomenys:
+plot(enplanements)
+acf(enplanements)
+# Matome, kad duomenys turi trendą didėti ir sezoniškumą
+lemda4<-BoxCox.lambda(enplanements) #randa reikiama lemda
+n4<-nsdiffs(enplanements) # diferenciavimo eilė, nsdiffs nes turi sezoniškumą
+#panaudosime boxcox tranformacija ir diferenciavimą:
+df4 <- diff(BoxCox(enplanements, lambda =lemda4),differences = n4)
+plot(df4, col="blue", ylab="diferencijuoti duomenys")
+```
+
+Galime ir su testu kpss.test() įsitikinti, kad duomenys tapo stacionarūs
+Ho: duomenys stacionarūs H1: duomenys nestacionarūs:
+
+```{r,message=FALSE}
+kpss.test(df4)
+```
+
+Kadangi p-value > 0.05, vadinasi Ho priimane, duomenys stacionarūs.
+
+**(e) visitors:**
+
+```{r}
+#duomenys:
+plot(visitors)
+acf(visitors)
+# Matome, kad duomenys turi trendą didėti ir sezoniškumą
+lemda5<-BoxCox.lambda(visitors) #randa reikiama lemda
+n5<-nsdiffs(visitors) # diferenciavimo eilė, nsdiffs nes turi sezoniškumą
+#panaudosime boxcox tranformacija ir diferenciavimą:
+df5 <- diff(BoxCox(visitors, lambda =lemda5),differences = n5)
+plot(df5, col="blue", ylab="diferencijuoti duomenys")
+```
+
+Galime ir su testu kpss.test() įsitikinti, kad duomenys tapo stacionarūs
+Ho: duomenys stacionarūs H1: duomenys nestacionarūs:
+
+```{r,message=FALSE}
+kpss.test(df5)
+```
+
+Kadangi p-value > 0.05, vadinasi Ho priimane, duomenys stacionarūs.
+
+
+**2 užduotis** Why is a Box-Cox transformation unhelpful for the cangas data?
+
+**Pabandome Box-Cox transformacija ir žiūrime ką gausime:**
+
+```{r}
+#duomenys:
+plot(cangas)
+acf(cangas)
+# Matome, kad duomenys turi trendą(bet jis nevisada pastovus) didėti ir sezoniškumą
+lemda6<-BoxCox.lambda(cangas) #randa reikiama lemda
+#panaudosime boxcox tranformacija:
+df6 <- BoxCox(cangas, lambda =lemda6)
+plot(df6, col="blue", ylab="duomenys")
+```
+
+Niekas nepasikeitė. Box-Cox transformacija nepadeda **cangas** duomenims, nes pradžioj eilutės svyravimai mažesni ir pabaigoje mažesni, o ties viduriu svyravimai gerokai didesni ir jis nepasiūlo sprendimo šiai problemai. Box-Cox transformacija padeda, kai paklaidos turi heteroskedastiškumo problemą, kai pradžioje svyravimai maži, o begant laikui jie dideja.
+
+**3 užduotis:**
+Download the data at http://robjhyndman.com/data/retail.xls.
+Choose one of the series and find an appropriate Box-Cox transformation
+and order of differencing in order to obtain stationary data.
+
+**Nusiskaitome duomenis**
+
+```{r}
+data <- read.csv2(file= "ret.csv", header = TRUE)
+```
+
+**Pasidarome laiko eilute:**
+
+```{r}
+eil <- ts(data, start = c(1982,4), frequency = 12)
+# isbrežiame grafiką:
+plot(eil)
+acf(eil)
+```
+
+Matome, kad duomenys turi trendą didėti ir sezoniški(neryškiai).
+
+**Pritaikome Box-Cox transformacija ir diferencijuojame, kad duomenys būtų stacionarūs:**
+
+```{r}
+lemda7<-BoxCox.lambda(eil) #randa reikiama lemda
+n7<-nsdiffs(eil) # diferenciavimo eilė, ndiffs nes nera sezoniškumo
+#panaudosime boxcox tranformacija ir diferenciavimą:
+df7 <- diff(BoxCox(eil, lambda =lemda7),differences = n7)
+plot(df7, col="blue", ylab="diferencijuoti duomenys")
+```
+
+Pritaikę Box-Cox transformaciją ir diferencijavę duomenis, gauname stacionarius duomenis.
+
+Galime ir su testu kpss.test() įsitikinti, kad duomenys tapo stacionarūs
+Ho: duomenys stacionarūs H1: duomenys nestacionarūs:
+
+```{r,message=FALSE}
+kpss.test(df7)
+```
+
+Kadangi p-value > 0.05, vadinasi Ho priimane, duomenys stacionarūs.
+
+**Taigi Box-Cox transformacija padaro duomenis reguliarius, svyravimus vienodesnius, sprendžia heteroskedastiškumo problemą. O diferencijavimas duomenis daro stacionarius, kartais diferencijuoti reikia kelis kartus.**
