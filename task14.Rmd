@@ -1,0 +1,390 @@
+---
+title: "Task 14"
+author: "Laura Gudauskaitė"
+date: "May 10, 2016"
+output: "html_document"
+---
+
+Task 14
+========================================================
+
+# **1. Užduotis**
+
+For the wmurders data:
+**(a)** if necessary, find a suitable Box-Cox transformation for the data;
+**(b)** fit a suitable ARIMA model to the transformed data using
+auto.arima();
+**( c )** try some other plausible models by experimenting with the
+orders chosen;
+**(d)** choose what you think is the best model and check the residual
+diagnostics;
+**(e)** produce forecasts of your fitted model. Do the forecasts look
+reasonable?
+**(f)** compare the results with what you would obtain using ets()
+(with no transformation).
+
+**Naudosime fpp paketą:**
+
+```{r,message=FALSE}
+library(fpp)
+```
+
+**Mūsų duomenys:**
+
+```{r}
+data <- wmurders
+acf(data)
+```
+
+Matome iš ACF grafiko, kad duomenys turi trendą iš pradžių didėti, o paskui mažėti, neturi sezoniškumo ir ciklų.
+
+**(a) Žiūrime ar taikysime Box-Cox transformaciją:**
+
+```{r}
+plot(data)
+```
+
+Box-cox transformacijos netaikysime, nes pažiūrėjus į duomenis svyravimai nėra labai aiškūs, bet pradžioje ir pabaigoje eilutės jie mažesni, viduryje galime matyti juos kur kas didesnius, taigi transformacija šiems duomenims būtų neveiksminga.
+
+**(b) Duomenims taikysime auto.arima():**
+
+```{r}
+fit <- auto.arima(data)
+fit
+```
+
+auto.arima() įvertino modelį ARIMA(1,2,1).
+
+**( c ) Bandome kitus galimus ARIMA modelius:**
+
+```{r}
+n1<-ndiffs(data) #diferencijavimo eilė
+n1
+new<-diff(data,differences=n1) #diferencijuojame, kad duomenys taptų stacionarūs
+kpss.test(new) #duomenys stacionarus, nes p value > 0.05
+plot(new) # ir iš grafiko matome, kad stacionarūs
+tsdisplay(new)
+```
+
+PACF parodo, kad dalis AR galėtų būti 2 arba 1 (neryškus antras brūkšnys virš kritinės reikšmės), diferencijavus du kartus iš diferencijavimo eilės matome, kad duomenys tapo stacionarūs, vadinasi dalis I galėtų būti 2. ACF grafike matome antra neryškų brūkšnį virš kritinės reikšmės, taigi MA dalis galėtų būti 2 arba 1. Mano tikrinami modeliai: ARIMA(2,2,1) ir ARIMA(2,2,2).
+
+```{r}
+fit1 <- Arima(data, order=c(2,2,1))
+summary(fit1)
+fit2 <- Arima(data, order=c(2,2,2))
+summary(fit2)
+```
+
+**(d) Renkames kuris ARIMA modelis geriausias ir darome paklaidų diagnozę:**
+
+Tikriname modelių AIC ir RMSE:
+
+```{r}
+fit[6]
+fit1[6]
+fit2[6]
+accuracy(fit)
+accuracy(fit1)
+accuracy(fit2)
+```
+
+fit2 AIC mažiausias -5.256671. RMSE beveik nesiskiria, bet irgi fit2 geriausias, taigi šį ARIMA(2,2,2) modelį rinksimės kaip geriausią ir tikrinsime ar paklaidos yra baltasis triukšmas:
+
+```{r}
+acf(residuals(fit2))
+# iš grafiko matome, kad paklaidos turėtų būti baltasis triukšmas, patikrinsime ir su testu:
+# Ho: paklaidos yra baltasis triukšmas ir H1: paklaidos nėra baltasis triukšmas
+Box.test(residuals(fit2), type="Ljung")
+# p value > 0.05 vadinasi Ho priimame, taigi paklaidos yra baltasis triukšmas
+```
+
+
+**(e) Darome prognozę pasirinktam modeliui:**
+
+```{r}
+fcast <- forecast(fit2)
+plot(fcast)
+```
+
+Prognozė ganėtinai protinga ir nebloga, atsižvelgia į mažėjantį trendą, tačiau visiskai neatsižvelgia į prieš tai buvusį didėjantį trendą, manau per staigiai mažėja prognozė.
+
+**(f) Panaudosime ets() funciją ir palyginsime su turimu modeliu:**
+
+```{r}
+fit4 <- ets(data)
+fit4 # siulomas modelis ETS(M,N,N) multiplicative, no trend, no seasonal
+fcast4 <- forecast(fit4)
+plot(fcast4)
+acf(residuals(fit4))
+Box.test(residuals(fit4), type="Ljung")
+# matome, kad paklaidos baltasis triukšmas, nes p value > 0.05
+```
+
+Palyginame modelius pagal RMSE:
+
+```{r}
+accuracy(fit2)
+accuracy(fit4)
+```
+
+Matome, kad fit2 RMSE mažesnis, vadinasi modelis ARIMA(2,2,2) prognozavimui tikslesnis.
+
+# **2. Užduotis** 
+
+For the usgdp data:
+**(a)** if necessary, find a suitable Box-Cox transformation for the data;
+**(b)** fit a suitable ARIMA model to the transformed data using
+auto.arima();
+**( c )** try some other plausible models by experimenting with the
+orders chosen;
+**(d)** choose what you think is the best model and check the residual
+diagnostics;
+**(e)** produce forecasts of your fitted model. Do the forecasts look
+reasonable?
+**(f)** compare the results with what you would obtain using ets()
+(with no transformation).
+
+**Mūsų duomenys:**
+
+```{r}
+data1 <- usgdp
+acf(data1)
+```
+
+Matome, kad duomenys turi trendą didėti, neturi sezoniškumo ir ciklo.
+
+**(a) Žiūrime ar taikysime Box-Cox transformaciją:**
+
+```{r}
+plot(data1)
+```
+
+Iš pradžių duomenys mažesniais svyravimais, paskui truputi didesni, dėl to taikysime transformaciją.
+
+```{r}
+lemda1<-BoxCox.lambda(data1) #randa reikiama lemda
+#panaudosime boxcox tranformacija:
+trans1 <- BoxCox(data1, lambda =lemda1)
+plot(trans1)
+```
+
+Taigi, matome, kad duomenų svyravimai tapo reguleresniais, svyruoja gražiai vienodai, pagal trendą.
+
+**(b) Transformuotiems duomenims taikysime auto.arima():**
+
+```{r}
+fit5 <- auto.arima(trans1)
+fit5
+```
+
+Ivertino ARIMA(2,1,0) modelį.
+
+**( c ) Bandome kitus galimus ARIMA modelius:**
+
+```{r}
+n2<-ndiffs(trans1) #diferencijavimo eilė
+n2
+new1<-diff(trans1,differences=n2) #diferencijuojame, kad duomenys taptų stacionarūs
+kpss.test(new1) #duomenys stacionarus, nes p value > 0.05
+plot(new1) # ir iš grafiko matome, kad stacionarūs
+tsdisplay(new1)
+```
+
+PACF parodo, kad dalis AR galėtų būti 2, diferencijavus vieną kartą iš diferencijavimo eilės matome, kad duomenys tapo stacionarūs, vadinasi dalis I galėtų būti 1. ACF grafike matome 3 ryškius brūkšnius virš kritinės reikšmės ir 1 neryškų, taigi MA dalis galėtų būti 3 arba 4. Mano tikrinami modeliai: ARIMA(0,1,3), ARIMA(0,1,4).
+
+```{r}
+fit6 <- Arima(trans1, order=c(0,1,3))
+summary(fit6)
+fit7 <- Arima(trans1, order=c(0,1,4))
+summary(fit7)
+```
+
+**(d) Renkames kuris ARIMA modelis geriausias ir darome paklaidų diagnozę:**
+
+Tikriname modelių AIC ir RMSE:
+
+```{r}
+fit5[6]
+fit6[6]
+fit7[6]
+accuracy(fit5)
+accuracy(fit6)
+accuracy(fit7)
+```
+
+AIC mažiausia fit6, bet RMSE mažiausias fit5, todėl ir rinksimės šį ARIMA(2,1,0) modelį  kaip geriausią, nes tiksliausiai prognuozuos(RMSE mažiausias) ir tikrinsime ar paklaidos yra baltasis triukšmas:
+
+```{r}
+acf(residuals(fit5))
+# iš grafiko matome, kad paklaidos turėtų būti baltasis triukšmas, patikrinsime ir su testu:
+# Ho: paklaidos yra baltasis triukšmas ir H1: paklaidos nėra baltasis triukšmas
+Box.test(residuals(fit5), type="Ljung")
+# p value > 0.05 vadinasi Ho priimame, taigi paklaidos yra baltasis triukšmas
+```
+
+
+**(e) Darome prognozę pasirinktam modeliui:**
+
+```{r}
+fcast1 <- forecast(fit5,h=40)
+plot(fcast1)
+```
+
+Prognozė ganėtinai protinga ir nebloga, atsižvelgia į trendą.
+
+**(f) Panaudosime ets() funciją ir palyginsime su turimu modeliu:**
+
+```{r}
+fit8 <- ets(data1)
+fit8 # siulomas modelis ETS(A,A,N)
+fcast2 <- forecast(fit8,h=40)
+plot(fcast2)
+acf(residuals(fit8))
+Box.test(residuals(fit8), type="Ljung")
+# matome, kad paklaidos baltasis triukšmas, nes p value > 0.05
+```
+
+Palyginame modelius pagal RMSE:
+
+```{r}
+accuracy(fit5)
+accuracy(fit8)
+```
+
+Matome, ryškiai skiriasi RMSE, geresnis modelis prognozuoti duomenis yra fit5 tai yra ARIMA(2,1,0).
+
+
+# **3.Užduotis**
+
+For the mcopper data:
+**(a)** if necessary, find a suitable Box-Cox transformation for the data;
+**(b)** fit a suitable ARIMA model to the transformed data using
+auto.arima();
+**( c )** try some other plausible models by experimenting with the
+orders chosen;
+**(d)** choose what you think is the best model and check the residual
+diagnostics;
+**(e)** produce forecasts of your fitted model. Do the forecasts look
+reasonable?
+**(f)** compare the results with what you would obtain using ets()
+(with no transformation).
+
+
+**Mūsų duomenys:**
+
+```{r}
+data2 <- mcopper
+acf(data2)
+```
+
+Matome, kad duomenys turi trendą augti, bet lėtai, neturi sezoniškumo.
+
+**(a) Žiūrime ar taikysime Box-Cox transformaciją:**
+
+```{r}
+plot(data2)
+```
+
+Matome, kad duomenų svyravimai didėja, todėl naudosime transformaciją.
+
+```{r}
+dalis<-window(mcopper, end=2005) # kadangi gale didelis šuolis
+plot(dalis)
+lemda2<-BoxCox.lambda(dalis) #transformacijos lambda be paskutinio staigaus šiuolio
+#panaudosime boxcox tranformacija:
+trans2 <- BoxCox(data2, lambda =lemda2)
+plot(trans2)
+```
+
+Taigi, matome, kad duomenų svyravimai tapo reguleresniais, svyravimai supanašėjo, dispersija konstanta.
+
+**(b) Transformuotiems duomenims taikysime auto.arima():**
+
+```{r}
+fit9 <- auto.arima(trans2)
+fit9
+```
+
+Ivertino ARIMA(0,1,1) modelį.
+
+**( c ) Bandome kitus galimus ARIMA modelius:**
+
+```{r}
+n3<-ndiffs(trans2) #diferencijavimo eilė
+n3
+new2<-diff(trans2,differences=n3) #diferencijuojame, kad duomenys taptų stacionarūs
+kpss.test(new2) #duomenys stacionarus, nes p value > 0.05
+plot(new2) # ir iš grafiko matome, kad stacionarūs
+tsdisplay(new2)
+```
+
+PACF parodo, kad dalis AR galėtų būti 4, 1 tik ryškus, diferencijavus vieną kartą iš diferencijavimo eilės matome, kad duomenys tapo stacionarūs, vadinasi dalis I galėtų būti 1. ACF grafike matome 4 išlindusius brūkšnius virš kritinės reikšmės, taigi MA dalis galėtų būti 4, tačiau nėra labai ryškūs, išskyrus 2. Mano tikrinami modeliai: ARIMA(4,1,4), ARIMA(4,1,3), ARIMA(1,1,2), ARIMA(1,1,4)
+
+```{r}
+fit10 <- Arima(trans2, order=c(4,1,4))
+summary(fit10)
+fit11 <- Arima(trans2, order=c(4,1,3))
+summary(fit11)
+fit12 <- Arima(trans2, order=c(1,1,2))
+summary(fit12)
+fit13 <- Arima(trans2, order=c(1,1,4))
+summary(fit13)
+```
+
+**(d) Renkames kuris ARIMA modelis geriausias ir darome paklaidų diagnozę:**
+
+Tikriname modelių AIC ir RMSE:
+
+```{r}
+fit9[6]
+fit10[6]
+fit11[6]
+fit12[6]
+fit13[6]
+accuracy(fit9)
+accuracy(fit10)
+accuracy(fit11)
+accuracy(fit12)
+accuracy(fit13)
+```
+
+AIC mažiausia fit9, bet RMSE mažiausias fit10, todėl ir rinksimės šį ARIMA(4,1,4) modelį  kaip geriausią, nes tiksliausiai prognuozuos(RMSE mažiausias) ir tikrinsime ar paklaidos yra baltasis triukšmas:
+
+```{r}
+acf(residuals(fit10))
+# iš grafiko matome, kad paklaidos turėtų būti baltasis triukšmas, patikrinsime ir su testu:
+# Ho: paklaidos yra baltasis triukšmas ir H1: paklaidos nėra baltasis triukšmas
+Box.test(residuals(fit10), type="Ljung")
+# p value > 0.05 vadinasi Ho priimame, taigi paklaidos yra baltasis triukšmas
+```
+
+
+**(e) Darome prognozę pasirinktam modeliui:**
+
+```{r}
+fcast2 <- forecast(fit10,h=40)
+plot(fcast2)
+```
+
+Prognozė labai atsižvelgė į staigų pakilimą, tačiau galėjo atsižvelgti daugiau į prieš tai buvusius svyravimus.
+
+**(f) Panaudosime ets() funciją ir palyginsime su turimu modeliu:**
+
+```{r}
+fit14 <- ets(data2)
+fit14 # siulomas modelis ETS(M,Ad,N)
+fcast14 <- forecast(fit14,h=40)
+plot(fcast14)
+acf(residuals(fit14))
+Box.test(residuals(fit14), type="Ljung")
+# Pagal box test ir Acf manome, kad baltojo triukšmo nėra nes p-value < 0.05.
+```
+
+Palyginame modelius pagal RMSE:
+
+```{r}
+accuracy(fit10)
+accuracy(fit14)
+```
+
+Matome, ryškiai skiriasi RMSE, geresnis modelis prognozuoti duomenis yra fit10 tai yra ARIMA(4,1,4).Visiems duomenims ir netransformuotiems gavome, pakankamai netikslę prognozę, kur net paklaidos nėra baltasis triukšmas.
