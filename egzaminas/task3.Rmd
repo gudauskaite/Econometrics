@@ -1,0 +1,107 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+##3 uzduotis
+
+#1.
+
+(a) pasileidziame duomenis:
+
+```{r}
+library(dynlm)
+data <- M1Germany
+```
+
+vertinam tiesine regresija:
+
+```{r}
+mod1 <- lm(logm1~logprice, data=data)
+serOrg <- resid(mod1)
+```
+
+is liekanu padarome laiko eilute:
+
+```{r}
+eil <- ts(serOrg)
+```
+
+(c) isbreziame laiko eilute:
+
+```{r}
+plot(eil)
+acf(eil)
+```
+ galima matyti sezoniskuma, nes yra pikai ties 12, tada naujas sezonas prasideda galime izvelgti is acf grafiko.
+ 
+ (d)tikriname ar eilute yra stacionari:
+pirmiausia pasaliname sezoniskuma:
+
+```{r}
+dif <- diff(eil, lag=12)
+# uzlaginam per sezona dingsta sezoniskumas
+plot(dif)
+#matome, kad nestacionari dar karta diferencijuojame
+dif2 <- diff(dif)
+plot(dif2)
+#jau panasesne i stacionare, pritaikome testa:
+library(fpp)
+kpss.test(dif2)
+#kadangi p value daugiau uz 0.05 vadinasi eilute jau stacionari
+```
+
+(e) Manau, kad eilutei reikalinga box cox transformacija, nes svyravimai nera vienodi ir reguliarus, taigi pritaikysime transformacija:
+
+```{r}
+lemda <- BoxCox.lambda(dif2)
+trans <- BoxCox(dif2, lambda =lemda)
+plot(trans)
+```
+
+Taciau, pritaike matome, kad transformacija nepadejo, nes ties viduriu svyravimai truputi didesni taigi sios problemos box cox transformacija neissprendzia taigi vis del to jos taikyti nereikia.
+
+#2. 
+
+(a) naudojame ets() funkcija:
+
+```{r}
+mod2 <- ets(dif2)
+mod2
+```
+
+ets() siulomas modelis yra ETS(A,N,N) reiskia no seasional,no trend ir additive errors.
+
+(b) kadangi diferencijavome 1 karta tai modelis galetu buti 
+dalis I(1), paziurekime i acf grafika:
+
+```{r}
+acf(dif2)
+pacf(dif2)
+```
+ matome 4 lagus virs melynos linijos, taigi dalis AR galetu buti 4,o is pacf 3 tai MA dalis galetu buti 3 tai bandome si ARIMA modeli:
+ 
+ 
+```{r}
+mod3 <- Arima(dif2, order=c(4,1,3))
+summary(mod3)
+```
+
+tikrinsime modeliu RMSE :
+
+```{r}
+accuracy(mod2)
+accuracy(mod3)
+```
+
+Matome, kad mano pasirinkto ARIMA(4.1.3) rmse yra mazesnis vadinasi modelis prognozuos tiksliau, ji renkuosi kaip geriausia.
+
+#3.
+
+(a) tikriname liekanas ar yra baltasis triuksmas:
+
+```{r}
+Box.test(mod2$res, fitdf=0, type="Lj")
+Box.test(mod3$res, fitdf=0, type="Lj")
+```
+matome, kad abieju modeliu liekanos yra baltasis triuksmas nes p value daugiau uz 0.05
