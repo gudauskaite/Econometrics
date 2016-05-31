@@ -1,0 +1,94 @@
+---
+title: "Egzaminas"
+author: Laura Gudauskaite
+output: html_document
+---
+##2 uzduotis
+
+#1.
+
+(a) Nusiskaitome duomenis:
+
+```{r}
+dat <- read.csv2("data.csv", header = TRUE)
+attach(dat)
+kaina = as.numeric(kaina)
+rida = as.numeric(rida)
+amzius = as.numeric(amzius)
+galia = as.numeric(galia)
+markeKodas = as.character(markesKodas)
+```
+
+(b) Pašaliname missing values ir viena bloga duomeni:
+
+```{r}
+dat$amzius[dat$amzius=="MISSING"] <- NA
+dat$kaina[dat$kaina=="MISSING"] <- NA
+dat$amzius[dat$amzius==">20"] <- NA
+data <- na.omit(dat)
+```
+
+Istriname isskirtis, jei ju yra:
+
+```{r}
+a<-match(boxplot(kaina)$out ,data[,"kaina"])
+b<-match(boxplot(rida)$out ,data[,"rida"])
+c<-match(boxplot(amzius)$out ,data[,"amzius"]) 
+d<-match(boxplot(galia)$out ,data[,"galia"])
+f<-c(a,b,c,d)
+datan<-data[-f,]
+```
+
+(c) Kintamuju apzvalga :
+
+tikriname kintamųjų tarpusavio koreliacijas/priklausomybes su cor() funkcija:
+
+```{r}
+plot(data)
+```
+
+Matome, kad tiesiniu koreliaciju tarp kintamuju nera.
+
+(d) skiriame duomenis i test ir training set:
+
+```{r}
+splitDataFrame <- function(data, seed = NULL, n = trainSize) {
+if (!is.null(seed)) set.seed(seed)
+index <- 1:nrow(data)
+trainindex <- sample(index, n)
+trainset <- data[trainindex, ]
+testset <- data[-trainindex, ]
+list(trainset = trainset, testset = testset)
+}
+dataList <- splitDataFrame(data, NULL, round(nrow(data) * 0.8))
+train <- dataList$trainset
+test <- dataList$testset
+
+```
+
+apie 80% duomenu i training set skeliam o 20% i test set.
+
+#2.
+
+(a) vertiname tiesini modeli:
+
+```{r}
+mod1 <- lm(kaina~rida+amzius+galia+markesKodas)
+summary(mod1)
+```
+
+(b) Jei yra nereiksmingu kintamuju juos ismesime ir paliksime tik reiksmingus kurie daro itaka:
+
+Is modelio summary lenteles pagal p-value kuris didesnis uz 0.05 matome, kad nereiksmingi kintamieji yra:
+
+amzius, galia, markesKodasky, markesKodasqt.
+
+Taigi visi kintamieji jau daro itaka :
+
+```{r}
+mod2 <- lm(kaina~rida)
+summary(mod2)
+```
+
+kintamiehi reiksmingi.
+
